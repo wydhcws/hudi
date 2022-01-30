@@ -63,7 +63,7 @@ public class FlinkClientUtil {
    * @param hadoopConfDir Hadoop conf directory path.
    * @return A Hadoop configuration instance.
    */
-  private static org.apache.hadoop.conf.Configuration getHadoopConfiguration(String hadoopConfDir) {
+  public static org.apache.hadoop.conf.Configuration getHadoopConfiguration(String hadoopConfDir) {
     if (new File(hadoopConfDir).exists()) {
       org.apache.hadoop.conf.Configuration hadoopConfiguration = new org.apache.hadoop.conf.Configuration();
       File coreSite = new File(hadoopConfDir, "core-site.xml");

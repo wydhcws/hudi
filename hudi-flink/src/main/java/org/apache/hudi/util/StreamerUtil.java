@@ -144,6 +144,17 @@ public class StreamerUtil {
     return FlinkClientUtil.getHadoopConf();
   }
 
+  //multi hdfs cluster
+  public static org.apache.hadoop.conf.Configuration getHadoopConf(Configuration conf) {
+    String hadoopConfDir = conf.get(FlinkOptions.HADOOP_CONF_DIR);
+    if(hadoopConfDir!=null){
+      return FlinkClientUtil.getHadoopConfiguration(hadoopConfDir);
+    }
+    else{
+      return FlinkClientUtil.getHadoopConf();
+    }
+  }
+
   public static HoodieWriteConfig getHoodieClientConfig(Configuration conf) {
     HoodieWriteConfig.Builder builder =
         HoodieWriteConfig.newBuilder()
@@ -232,7 +243,7 @@ public class StreamerUtil {
    */
   public static HoodieTableMetaClient initTableIfNotExists(Configuration conf) throws IOException {
     final String basePath = conf.getString(FlinkOptions.PATH);
-    final org.apache.hadoop.conf.Configuration hadoopConf = StreamerUtil.getHadoopConf();
+    final org.apache.hadoop.conf.Configuration hadoopConf = StreamerUtil.getHadoopConf(conf);
     if (!tableExists(basePath, hadoopConf)) {
       HoodieTableMetaClient metaClient = HoodieTableMetaClient.withPropertyBuilder()
           .setTableType(conf.getString(FlinkOptions.TABLE_TYPE))
@@ -345,7 +356,7 @@ public class StreamerUtil {
   public static HoodieFlinkWriteClient createWriteClient(Configuration conf, RuntimeContext runtimeContext) {
     HoodieFlinkEngineContext context =
         new HoodieFlinkEngineContext(
-            new SerializableConfiguration(getHadoopConf()),
+            new SerializableConfiguration(getHadoopConf(conf)),
             new FlinkTaskContextSupplier(runtimeContext));
 
     HoodieWriteConfig writeConfig = getHoodieClientConfig(conf);

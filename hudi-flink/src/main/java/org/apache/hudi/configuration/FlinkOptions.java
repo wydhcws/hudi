@@ -65,6 +65,13 @@ public class FlinkOptions extends HoodieConfig {
           + "The path would be created if it does not exist,\n"
           + "otherwise a Hoodie table expects to be initialized successfully");
 
+  public static final ConfigOption<String> HADOOP_CONF_DIR = ConfigOptions
+          .key("fs.hadoop.conf")
+          .stringType()
+          .noDefaultValue()
+          .withDescription("Target hdfs cluster conf dir. if no set ,will use env config\n");
+
+
   // ------------------------------------------------------------------------
   //  Common Options
   // ------------------------------------------------------------------------
