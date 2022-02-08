@@ -35,6 +35,7 @@ import org.apache.hudi.common.function.SerializablePairFunction;
 import org.apache.hudi.common.util.Option;
 
 import org.apache.flink.api.common.functions.RuntimeContext;
+import org.apache.hadoop.conf.Configuration;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -70,6 +71,10 @@ public class HoodieFlinkEngineContext extends HoodieEngineContext {
 
   public HoodieFlinkEngineContext(TaskContextSupplier taskContextSupplier) {
     this(new SerializableConfiguration(FlinkClientUtil.getHadoopConf()), taskContextSupplier);
+  }
+
+  public HoodieFlinkEngineContext(Configuration hadoopConf) {
+    this(new SerializableConfiguration(hadoopConf),  new DefaultTaskContextSupplier());
   }
 
   public HoodieFlinkEngineContext(SerializableConfiguration hadoopConf, TaskContextSupplier taskContextSupplier) {

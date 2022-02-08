@@ -50,9 +50,11 @@ public class FileIndex {
   private final HoodieMetadataConfig metadataConfig;
   private List<String> partitionPaths; // cache of partition paths
   private final boolean tableExists;
+  private final Configuration conf;
 
   private FileIndex(Path path, Configuration conf) {
     this.path = path;
+    this.conf = conf;
     this.metadataConfig = metadataConfig(conf);
     this.tableExists = StreamerUtil.tableExists(path.toString(), StreamerUtil.getHadoopConf(conf));
   }
@@ -118,7 +120,7 @@ public class FileIndex {
       return new FileStatus[0];
     }
     String[] partitions = getOrBuildPartitionPaths().stream().map(p -> fullPartitionPath(path, p)).toArray(String[]::new);
-    return FSUtils.getFilesInPartitions(HoodieFlinkEngineContext.DEFAULT, metadataConfig, path.toString(),
+    return FSUtils.getFilesInPartitions(new HoodieFlinkEngineContext(StreamerUtil.getHadoopConf(conf)), metadataConfig, path.toString(),
             partitions, "/tmp/")
         .values().stream().flatMap(Arrays::stream).toArray(FileStatus[]::new);
   }
@@ -172,7 +174,7 @@ public class FileIndex {
       return this.partitionPaths;
     }
     this.partitionPaths = this.tableExists
-        ? FSUtils.getAllPartitionPaths(HoodieFlinkEngineContext.DEFAULT, metadataConfig, path.toString())
+        ? FSUtils.getAllPartitionPaths(new HoodieFlinkEngineContext(StreamerUtil.getHadoopConf(conf)), metadataConfig, path.toString())
         : Collections.emptyList();
     return this.partitionPaths;
   }

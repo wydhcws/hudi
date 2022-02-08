@@ -346,7 +346,12 @@ public class StreamerUtil {
    * Creates the meta client.
    */
   public static HoodieTableMetaClient createMetaClient(Configuration conf) {
-    return createMetaClient(conf.getString(FlinkOptions.PATH));
+    String hadoopConfDir = conf.getString(FlinkOptions.HADOOP_CONF_DIR);
+    if(hadoopConfDir!=null){
+      return createMetaClient(conf.getString(FlinkOptions.PATH),FlinkClientUtil.getHadoopConfiguration(hadoopConfDir));
+    }else{
+      return createMetaClient(conf.getString(FlinkOptions.PATH));
+    }
   }
 
   /**
@@ -374,7 +379,7 @@ public class StreamerUtil {
   public static HoodieFlinkWriteClient createWriteClient(Configuration conf) throws IOException {
     HoodieWriteConfig writeConfig = getHoodieClientConfig(conf);
     // build the write client to start the embedded timeline server
-    return new HoodieFlinkWriteClient<>(HoodieFlinkEngineContext.DEFAULT, writeConfig);
+    return new HoodieFlinkWriteClient<>(new HoodieFlinkEngineContext(StreamerUtil.getHadoopConf(conf)), writeConfig);
   }
 
   /**

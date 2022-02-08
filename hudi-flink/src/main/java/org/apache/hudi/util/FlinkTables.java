@@ -72,6 +72,6 @@ public class FlinkTables {
    */
   public static HoodieFlinkTable<?> createTable(Configuration conf) {
     HoodieWriteConfig writeConfig = StreamerUtil.getHoodieClientConfig(conf);
-    return HoodieFlinkTable.create(writeConfig, HoodieFlinkEngineContext.DEFAULT);
+    return HoodieFlinkTable.create(writeConfig, new HoodieFlinkEngineContext(StreamerUtil.getHadoopConf(conf)));
   }
 }

@@ -267,9 +267,9 @@ public class HoodieFlinkWriteClient<T extends HoodieRecordPayload> extends
    * Initialize the table metadata writer, for e.g, bootstrap the metadata table
    * from the filesystem if it does not exist.
    */
-  public void initMetadataWriter() {
+  public void initMetadataWriter(Configuration conf) {
     HoodieBackedTableMetadataWriter metadataWriter = (HoodieBackedTableMetadataWriter) FlinkHoodieBackedTableMetadataWriter.create(
-        FlinkClientUtil.getHadoopConf(), this.config, HoodieFlinkEngineContext.DEFAULT);
+        conf, this.config, new HoodieFlinkEngineContext(conf));
     this.metadataWriterOption = Option.of(metadataWriter);
   }
 

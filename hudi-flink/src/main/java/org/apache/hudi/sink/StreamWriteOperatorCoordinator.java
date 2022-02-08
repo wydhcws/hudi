@@ -303,7 +303,7 @@ public class StreamWriteOperatorCoordinator
   }
 
   private void initMetadataSync() {
-    this.writeClient.initMetadataWriter();
+    this.writeClient.initMetadataWriter(StreamerUtil.getHadoopConf(conf));
   }
 
   private void reset() {
